@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock %}
+{% block content %}
+<style>
+  body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('/static/bg-2.jpg');
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  .signup-container {
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      max-width: 400px;
+      width: 100%;
+  }
+  .signup-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+  }
+  .signup-container input[type="text"],
+  .signup-container input[type="password"],
+  .signup-container input[type="email"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+  }
+  .signup-container input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+  }
+  .signup-container input[type="submit"]:hover {
+      background-color: #0056b3;
+  }
+</style>
+</head>
+<body>
+
+    <form method="POST" action="/sign_up">
+      <div class="signup-container">
+        <h2>Sign Up</h2>
+        <form action="#">
+            <input type="text" name="firstName" placeholder="Full Name">
+            <input type="email" name="email" placeholder="Email">
+            <input type="password" name="password1" placeholder="Password">
+            <input type="password" name="password2" placeholder="password(confirm)">
+        </form>
+      <br />
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+{% endblock %}

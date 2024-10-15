@@ -1,0 +1,8 @@
+sk-proj-OlgN62C5UFB8FLJY7Cd5T3BlbkFJV47Cbhco3Qa7yS9R5umK
+username: admin@triptrek.com
+password: admin12
+
+mysql-  root, toor
+user amm, password- tinku
+
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIVXxPCf04wlaciaU3Gnp+MEuY1naqWdsOBukOKOF2Ed gadiprathyusha2712@gmail.com

@@ -1,0 +1,73 @@
+{% extends "base.html" %} 
+{% block title %}
+    Login
+{% endblock %} 
+
+{% block content %} 
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-image: url('/static/bg-1.jpg');
+        background-size: cover;
+        background-position: center;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .login-container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 100%;
+    }
+    .login-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .login-container input[type="text"],
+    .login-container input[type="password"] {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .login-container input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .login-container input[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+</style>
+</head>
+<body>
+
+<div style="text-align: center;">
+    <form method="POST" style="display: inline-block; text-align: left;">
+        <h3 style="font-size: 24px;">Login</h3>
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="email" style="display: block; font-weight: bold; margin-bottom: 5px; font-size: 16px; color: #f5f0f0;">Email Address</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" style="width: 200%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
+        </div>
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label for="password" style="display: block; font-weight: bold; margin-bottom: 5px; font-size: 16px; color: #f8f6f6;">Password</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" style="width: 200%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
+        </div>
+        <br>
+        <div>
+            <button type="submit" class="btn btn-primary" style="padding: 10px 20px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Login</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
