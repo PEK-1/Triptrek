@@ -1,8 +1,9 @@
-from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
+from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, session
 from flask_login import login_required, current_user
-from .models import Note
-from . import db
-import json
+from .opni import generate_itinerary
+#from .models import Note
+#from . import db
+#import json
 
 views = Blueprint('views', __name__)
 
@@ -21,8 +22,28 @@ def home():
 def form():
     return render_template("form.html")
 
+@views.route('/submit', methods=['POST'])
+def submit():
+    # Collect data from the form
+    place = request.form['place']
+    visit_date = request.form['visit_date']
+    days = request.form['days']
+    requirements = request.form['requirements']
 
-@views.route('/', methods=['POST'])
+    # Store data in the session
+    session['place'] = place
+    session['visit_date'] = visit_date
+    session['days'] = days
+    session['requirements'] = requirements
+
+    # Redirect to opni.py (you need to set this route in opni.py)
+    itinerary = generate_itinerary(place, visit_date, days, requirements)
+
+    # Print the itinerary result instead of rendering a template
+    return f"<h1>Your Travel Itinerary</h1><p>{itinerary}</p>"
+
+
+'''@views.route('/', methods=['POST'])
 @login_required
 def add_note():  
     note_text = request.form.get('note')
@@ -47,4 +68,4 @@ def delete_note():
             db.session.delete(note)
             db.session.commit()
 
-    return jsonify({})
+    return jsonify({})'''

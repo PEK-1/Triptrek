@@ -5,4 +5,6 @@ password: admin12
 mysql-  root, toor
 user amm, password- tinku
 
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIVXxPCf04wlaciaU3Gnp+MEuY1naqWdsOBukOKOF2Ed gadiprathyusha2712@gmail.com
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDEDnk0sPsq1S+FaYoVv2UlHAM7kQF63BYl4MwevX11Y gadiprathyusha2712@gmail.com
+git@github.com:PEK-1/Triptrek.git
+ED25519 key fingerprint is SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU
