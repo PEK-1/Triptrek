@@ -1,0 +1,43 @@
+import requests
+
+# Your OpenWeatherMap API key
+API_KEY = "1aae463eaddfb7323c4e48d07c1ca2b8"
+
+def get_lat_lon(city):
+    """Get latitude and longitude of a city using OpenWeatherMap's Geocoding API."""
+    url = f"http://api.openweathermap.org/geo/1.0/direct?q={city}&limit=1&appid={API_KEY}"
+    response = requests.get(url).json()
+    if response:
+        return response[0]['lat'], response[0]['lon']
+    else:
+        raise ValueError("Invalid city name or not found.")
+
+def get_current_weather(lat, lon):
+    """Fetch the current weather for the given latitude and longitude."""
+    url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API_KEY}&units=metric"
+    response = requests.get(url).json()
+    
+    # Check if the response is valid
+    if response.get('cod') != 200:
+        raise ValueError("Error retrieving weather data.")
+
+    weather_description = response['weather'][0]['description']
+    temperature = response['main']['temp']
+    
+    return weather_description, temperature
+
+# User input for city
+city = input("Enter the location: ")
+
+try:
+    # Get latitude and longitude for the given city
+    lat, lon = get_lat_lon(city)
+    
+    # Fetch current weather data
+    weather_description, temperature = get_current_weather(lat, lon)
+
+    # Display current weather
+    print(f"Current weather in {city}: {weather_description}, Temperature: {temperature}°C")
+    
+except ValueError as e:
+    print(e)
