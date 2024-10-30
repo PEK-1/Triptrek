@@ -36,36 +36,26 @@ def submit():
     session['days'] = days
     session['requirements'] = requirements
 
-    # Redirect to opni.py (you need to set this route in opni.py)
-    itinerary = generate_itinerary(place, visit_date, days, requirements)
+    # Generate itinerary
+    itinerary_text = generate_itinerary(place, visit_date, days, requirements)
 
-    # Print the itinerary result instead of rendering a template
-    return f"<h1>Your Travel Itinerary</h1><p>{itinerary}</p>"
+    # Format itinerary text for HTML output
+    itinerary_html = "<h1>Your Travel Itinerary</h1><div>"
+    days_list = itinerary_text.split("Day")  # Split by day
+
+    for day in days_list:
+        if day.strip():
+            day_title = "Day" + day.split(":")[0].strip()
+            details = ":".join(day.split(":")[1:]).strip().replace("\n", "<br>")
+            itinerary_html += f"<div class='day'><h2>{day_title}</h2><p>{details}</p></div>"
+
+    itinerary_html += "</div>"
+
+    # Render the formatted itinerary in a template
+    return render_template("itinerary.html", itinerary=itinerary_html)
+
+@views.route('/locate')
+def locate():
+    return render_template("locate.html")
 
 
-'''@views.route('/', methods=['POST'])
-@login_required
-def add_note():  
-    note_text = request.form.get('note')
-
-    if len(note_text) < 1:
-        flash('Note is too short!', category='error') 
-    else:
-        new_note = Note(data=note_text, user_id=current_user.id)
-        db.session.add(new_note)
-        db.session.commit()
-        flash('pack your bags to go!', category='success')
-
-    return redirect(url_for('views.home'))
-
-@views.route('/delete-note', methods=['POST'])
-def delete_note():  
-    note = json.loads(request.data) 
-    noteId = note['noteId']
-    note = Note.query.get(noteId)
-    if note:
-        if note.user_id == current_user.id:
-            db.session.delete(note)
-            db.session.commit()
-
-    return jsonify({})'''

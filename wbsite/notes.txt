@@ -1,6 +1,6 @@
 sk-proj-OlgN62C5UFB8FLJY7Cd5T3BlbkFJV47Cbhco3Qa7yS9R5umK
-username: admin@triptrek.com
-password: admin12
+username: pgadi@csu.edu
+password: Password
 
 mysql-  root, toor
 user amm, password- tinku
@@ -8,3 +8,5 @@ user amm, password- tinku
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDEDnk0sPsq1S+FaYoVv2UlHAM7kQF63BYl4MwevX11Y gadiprathyusha2712@gmail.com
 git@github.com:PEK-1/Triptrek.git
 ED25519 key fingerprint is SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU
+
+1aae463eaddfb7323c4e48d07c1ca2b8 api-key for wheather
