@@ -16,7 +16,7 @@
         }
         header {
             text-align: center;
-            padding: 20px;
+            padding: 5px;
             background-color: #333;
             color: #fff;
         }
@@ -26,11 +26,11 @@
             padding: 10px;
         }
         .day {
-            margin-bottom: 20px;
-            padding: 15px;
+            margin-bottom: 10px;
+            padding: 10px;
             background-color: #fff;
             border: 1px solid #ddd;
-            border-radius: 5px;
+            border-radius: 4px;
         }
         h2 {
             color: #333;
@@ -41,19 +41,45 @@
             color: #666;
             font-size: 0.9em;
         }
+        button {
+            margin: 10px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>Your Travel Itinerary</h1>
-        <p>Explore your customized travel plan below:</p>
     </header>
     <main>
         <!-- Dynamic itinerary content goes here -->
         {{ itinerary|safe }}
     </main>
     <footer>
+        <button> save </button>
+        <button onclick="downloadItinerary()">download</button>
         <p>Have a great trip!</p>
     </footer>
+
+    <script>
+        function downloadItinerary() {
+            const itineraryContent = document.querySelector('main').innerText; // Get the itinerary content
+            const blob = new Blob([itineraryContent], { type: 'text/plain' }); // Create a Blob for the content
+            const link = document.createElement('a'); // Create a link element
+            link.href = URL.createObjectURL(blob); // Create a URL for the Blob
+            link.download = 'travel_itinerary.txt'; // Set the default filename
+            link.click(); // Simulate a click on the link to download
+            URL.revokeObjectURL(link.href); // Clean up the URL object
+        }
+    </script>
 </body>
 </html>
+ 

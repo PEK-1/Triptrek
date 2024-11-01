@@ -16,7 +16,8 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
             I need your expert travel planning skills! I've got a blank slate for my upcoming trip, and 
             I want it packed with fun activities and hidden gems. But here's the twist: 
             I also need you to consider the weather conditions in each location so that my plans aren't spoiled by rain or scorching heat. 
-            Can you craft the ultimate itinerary for me, making sure each day is filled with adventure and excitement while also being weather-appropriate?'''
+            Can you craft the ultimate itinerary for me, making sure each day is filled with adventure and excitement while also being weather-appropriate? and
+            I also don't want you to write anything after last day. not even enjoy your trip'''
         },
         {"role": "user", "content": prompt}
     ]
@@ -34,7 +35,7 @@ def prepare_prompt(place, visit_date, days, requirements):
     prompt = f"Plan a trip to {place} starting on {visit_date} for {days} days. "
     if requirements:
         prompt += f"Special requirements: {requirements}. "
-    prompt += "Make sure to include activities that are suitable for the weather during that time."
+    prompt += "Make sure to include activities that are suitable for the weather during that time. and display day in only title"
     
     return prompt
 

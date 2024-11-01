@@ -40,13 +40,17 @@ def submit():
     itinerary_text = generate_itinerary(place, visit_date, days, requirements)
 
     # Format itinerary text for HTML output
-    itinerary_html = "<h1>Your Travel Itinerary</h1><div>"
-    days_list = itinerary_text.split("Day")  # Split by day
+    itinerary_html = "<div>"
+    days_list = itinerary_text.split("\n\n")  # Assuming double newlines separate different days
 
     for day in days_list:
         if day.strip():
-            day_title = "Day" + day.split(":")[0].strip()
-            details = ":".join(day.split(":")[1:]).strip().replace("\n", "<br>")
+            # Extract title (e.g., "Day 1")
+            lines = day.strip().split("\n")
+            day_title = lines[0].strip()  # The first line is the title
+            details = "<br>".join(line.strip() for line in lines[1:] if line.strip())  # Join details with <br>
+
+            # Add to itinerary HTML
             itinerary_html += f"<div class='day'><h2>{day_title}</h2><p>{details}</p></div>"
 
     itinerary_html += "</div>"
