@@ -9,11 +9,20 @@
   <link 
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" 
     rel="stylesheet">
-  
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
   <style>
-    /* Optional: Adjust spacing for navbar items */
     .navbar-nav .nav-item {
       margin: 0 10px;
+    }
+    /* Style for map container */
+    #map {
+      height: 500px; /* Adjust height as needed */
+      width: 80%;    /* Set desired width */
+      margin: 30px auto; /* Center the map and add top margin */
+      display: block; /* Center-align the map */
     }
   </style>
 </head>
@@ -50,14 +59,67 @@
   </div>
 </nav>
 
-<!-- Optional Content Section -->
+<!-- Content Section -->
 <div class="container mt-5">
   <h1>Welcome to the Travel Planner!</h1>
   <p>Plan your trips effortlessly with real-time schedules and personalized recommendations.</p>
+
+  <!-- Map Container -->
+  <div id="map"></div>
 </div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<!-- JavaScript for Map -->
+<script>
+  // Initialize the map with specific bounds
+  const map = L.map('map', {
+    center: [20, 0], // Default to world view
+    zoom: 2,
+    maxBounds: [[-90, -180], [90, 180]], // Restrict the map to a single world map
+    maxBoundsViscosity: 1.0              // Set viscosity to keep the map within bounds
+  });
+
+  // Add a tile layer (OpenStreetMap)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18,
+    minZoom: 1,         // Set minimum zoom level
+    noWrap: true,       // Prevent horizontal wrapping
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  // Load GeoJSON data (example path)
+  fetch('static/maap.geojson') // My GeoJSON file
+  .then(response => response.json())
+  .then(data => {
+    L.geoJSON(data, {
+      style: feature => ({
+        fillColor: 'white', // Default color
+        weight: 1,
+        opacity: 1,
+        color: 'black',
+        fillOpacity: 0.7
+      }),
+      onEachFeature: (feature, layer) => {
+        layer.on('click', () => {
+          layer.setStyle({ fillColor: 'grey' }); // Change color on click
+          const note = prompt("Add a note for this country:");
+          if (note) {
+            layer.bindPopup(`<b>Note:</b> ${note}`).openPopup();
+          }
+        });
+      }
+    }).addTo(map);
+  })
+  .catch(error => {
+    console.error('Error loading GeoJSON data:', error);
+  });
+</script>
 
 <!-- Bootstrap JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
+

@@ -10,3 +10,5 @@ git@github.com:PEK-1/Triptrek.git
 ED25519 key fingerprint is SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU
 
 1aae463eaddfb7323c4e48d07c1ca2b8 api-key for wheather
+
+Username: pgadi, password: tRIPtREK@12 for mapbox
