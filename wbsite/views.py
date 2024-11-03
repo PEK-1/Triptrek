@@ -72,11 +72,23 @@ def add_trip():
 def mytips():
     return render_template("mytips.html", user=current_user)
 
+@views.route('/delete_trip/<int:trip_id>', methods=['DELETE'])
+@login_required
+def delete_trip(trip_id):
+    trip_to_delete = Trip.query.get(trip_id)
+    if trip_to_delete and trip_to_delete.user_id == current_user.id:
+        db.session.delete(trip_to_delete)
+        db.session.commit()
+        return {'message': 'Trip deleted successfully'}, 200
+    return {'message': 'Trip not found'}, 404
+
+
 @views.route('/get_user_trips', methods=['GET'])
 @login_required
 def get_user_trips():
     trips = Trip.query.filter_by(user_id=current_user.id).all()
     trips_data = [{
+        "id": trip.id,  # Ensure you're sending the id
         "place": trip.place,
         "date": trip.month,
         "days": trip.days,
@@ -89,4 +101,5 @@ def get_user_trips():
         "trip_description": trip.trip_description
     } for trip in trips]
     return jsonify(trips_data)
+
 
