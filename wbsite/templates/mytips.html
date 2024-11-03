@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Trips</title>
+  <style>
+    .trip-container { max-width: 800px; margin: 20px auto; padding: 10px; }
+    .trip-item { border: 1px solid #ddd; border-radius: 8px; padding: 15px; background-color: #fafafa; margin-bottom: 15px; }
+    .trip-title { font-size: 1.5em; font-weight: bold; cursor: pointer; }
+    .trip-subtitle { font-size: 1.1em; color: #555; }
+    .trip-details { display: none; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+<div class="trip-container" id="tripContainer"></div>
+
+<script>
+  async function fetchUserTrips() {
+    try {
+      const response = await fetch('/get_user_trips');
+      const trips = await response.json();
+      displayTrips(trips);
+    } catch (error) {
+      console.error('Error fetching trips:', error);
+    }
+  }
+
+  function displayTrips(trips) {
+    const tripContainer = document.getElementById('tripContainer');
+    
+    trips.forEach(trip => {
+      const tripItem = document.createElement('div');
+      tripItem.classList.add('trip-item');
+
+      const tripTitle = document.createElement('div');
+      tripTitle.classList.add('trip-title');
+      tripTitle.textContent = trip.place;
+
+      const tripSubtitle = document.createElement('div');
+      tripSubtitle.classList.add('trip-subtitle');
+      tripSubtitle.textContent = `Date: ${trip.date}`;
+
+      const tripDetails = document.createElement('div');
+      tripDetails.classList.add('trip-details');
+      tripDetails.innerHTML = `
+        <p><strong>Days:</strong> ${trip.days}</p>
+        <p><strong>Budget:</strong> $${trip.budget}</p>
+        <p><strong>Accommodation:</strong> ${trip.accommodation}</p>
+        <p><strong>Transport:</strong> ${trip.transport}</p>
+        <p><strong>Local Travel:</strong> ${trip.local_travel}</p>
+        <p><strong>Places Visited:</strong> ${trip.places_visited}</p>
+        <p><strong>Food Recommendations:</strong> ${trip.food_recommendations}</p>
+        <p><strong>Trip Description:</strong> ${trip.trip_description}</p>
+      `;
+
+      tripTitle.addEventListener('click', () => {
+        tripDetails.style.display = tripDetails.style.display === 'none' ? 'block' : 'none';
+      });
+
+      tripItem.appendChild(tripTitle);
+      tripItem.appendChild(tripSubtitle);
+      tripItem.appendChild(tripDetails);
+
+      tripContainer.appendChild(tripItem);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', fetchUserTrips);
+</script>
+
+</body>
+</html>

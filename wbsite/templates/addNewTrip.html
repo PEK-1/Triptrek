@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Trip Details Form</title>
+  <style>
+    /* Basic Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      padding: 20px;
+      background: linear-gradient(135deg, #74ebd5, #acb6e5);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+    .container:hover {
+      transform: scale(1.02);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    .form-group {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      font-weight: bold;
+      color: #444;
+      margin-bottom: 5px;
+    }
+    input[type="text"], 
+    input[type="number"], 
+    input[type="month"], 
+    textarea, 
+    select {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1em;
+      transition: all 0.3s ease;
+      background: #fff;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #74b9ff;
+      box-shadow: 0 0 5px rgba(116, 185, 255, 0.5);
+    }
+    textarea {
+      resize: vertical;
+    }
+    button {
+      margin-top: 15px;
+      padding: 12px;
+      background-color: #0984e3;
+      color: white;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    button:hover {
+      background-color: #74b9ff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    button:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Share Your Trip Details</h2>
+  <form action="{{ url_for('views.add_trip') }}" method="POST">
+
+    
+    <div class="form-group">
+      <label for="place">Place:</label>
+      <input type="text" id="place" name="place" placeholder="Enter the destination" required>
+    </div>
+
+    <div class="form-group">
+      <label for="days">Number of Days:</label>
+      <input type="number" id="days" name="days" min="1" placeholder="Enter the number of days" required>
+    </div>
+
+    <div class="form-group">
+      <label for="month">Which Month:</label>
+      <input type="month" id="month" name="month" required>
+    </div>
+
+    <div class="form-group">
+      <label for="budget">Budget (approximate):</label>
+      <input type="number" id="budget" name="budget" min="0" step="1" placeholder="Enter your budget in USD">
+    </div>
+
+    <div class="form-group">
+      <label for="accommodation">Place Stayed (Accommodation):</label>
+      <input type="text" id="accommodation" name="accommodation" placeholder="e.g., Hotel, Airbnb">
+    </div>
+
+    <div class="form-group">
+      <label for="transport">How Did You Travel (Transport):</label>
+      <select id="transport" name="transport">
+        <option value="plane">Plane</option>
+        <option value="train">Train</option>
+        <option value="car">Car</option>
+        <option value="bus">Bus</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="local-travel">How Did You Travel Locally:</label>
+      <select id="local-travel" name="local_travel">
+        <option value="bus">Bus</option>
+        <option value="cab">Cab</option>
+        <option value="rented-car">Rented Car</option>
+        <option value="bike">Bike</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="places-visited">Places Visited:</label>
+      <textarea id="places-visited" name="places_visited" rows="3" placeholder="List all places visited"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="food-recommendations">Recommended Food Places/Dishes:</label>
+      <textarea id="food-recommendations" name="food_recommendations" rows="3" placeholder="Mention any must-try food or restaurants"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="trip-description">Brief Description of Your Trip:</label>
+      <textarea id="trip-description" name="trip_description" rows="5" placeholder="Share your experience, highlights, etc." required></textarea>
+    </div>
+
+    <button type="submit"> Add Trip</button>
+  </form>
+</div>
+
+</body>
+</html>
