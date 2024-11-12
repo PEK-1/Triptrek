@@ -24,4 +24,3 @@ class Trip(db.Model):
     food_recommendations = db.Column(db.Text, nullable=True)
     trip_description = db.Column(db.Text, nullable=True)
     date_added = db.Column(db.DateTime(timezone=True), default=func.now())
-  

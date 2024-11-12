@@ -85,6 +85,22 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        #suggestions {
+            position: absolute;
+            background-color: white;
+            width: 80%;
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            display: none;
+        }
+        #suggestions div {
+            padding: 10px;
+            cursor: pointer;
+        }
+        #suggestions div:hover {
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
 <body>
@@ -95,8 +111,11 @@
     <a href="#">About</a>
     <a href="#">Contact</a>
     <div class="search-bar">
-        <input type="text" placeholder="Search...">
-        <button type="submit">Search</button>
+        <form action="/search" method="GET">
+            <input type="text" id="search-bar" name="query" placeholder="Search destinations...">
+            <button type="submit">Search</button>
+        </form>
+        <div id="suggestions"></div>
     </div>
 </div>
 

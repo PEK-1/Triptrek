@@ -18,14 +18,27 @@ def home():
 def form():
     return render_template("form.html")
 
-@views.route('/submit', methods=['POST'])
-def submit():
-    # Existing form submission code
-    place = request.form['place']
-    visit_date = request.form['visit_date']
-    days = request.form['days']
-    requirements = request.form['requirements']
-    # Generate itinerary (existing functionality)
+@views.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('query')  # Retrieve the 'query' parameter from the URL
+    if query:
+        # Query the Trip model for places that match the search term
+        destinations = Trip.query.filter(Trip.place.ilike(f'%{query}%')).all()
+    else:
+        destinations = []  # No query parameter means show no results
+    
+    # Prepare the results to include the user's name and date added
+    destinations_data = [{
+        "place": destination.place,
+        "days": destination.days,
+        "trip_description": destination.trip_description,
+        "budget": destination.budget,
+        "date_added": destination.date_added.strftime('%Y-%m-%d'),  # Format the date
+        "user_name": destination.user.first_name  # Get the first name of the user
+    } for destination in destinations]
+    
+    return render_template('search_results.html', destinations=destinations_data)
+
 
 @views.route('/addTrip', methods=['GET', 'POST'])
 @login_required
@@ -101,5 +114,4 @@ def get_user_trips():
         "trip_description": trip.trip_description
     } for trip in trips]
     return jsonify(trips_data)
-
 

@@ -37,4 +37,3 @@ def create_database():
     if not path.exists('wbsite/' + DB_NAME):
         db.create_all()
         print("Database created!")
-
