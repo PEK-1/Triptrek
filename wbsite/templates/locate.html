@@ -1,1 +1,109 @@
-<h1> enter ur location</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make My Day</title>
+    <script>
+        // Function to get the user's location using the browser's geolocation API
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function showPosition(position) {
+            // Get latitude and longitude from the browser's geolocation API
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+            // Send the location to the server
+            document.getElementById("location").value = `${lat},${lon}`; // Set the hidden input value
+            document.getElementById("manualLocation").style.display = "none"; // Hide manual location input
+            document.getElementById("submitBtn").style.display = "inline"; // Show submit button
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("User denied the request for Geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+        }
+
+        // Show the manual location input field
+        function showManualLocation() {
+            document.getElementById("manualLocation").style.display = "inline"; // Show manual input
+            document.getElementById("submitBtn").style.display = "inline"; // Show submit button
+        }
+    </script>
+</head>
+<body>
+
+<h1>Plan Your Day</h1>
+<button onclick="getLocation()">Use My Location</button>
+<button onclick="showManualLocation()">Enter Location Manually</button>
+
+<div id="manualLocation" style="display:none;">
+    <input type="text" id="manualLocationInput" placeholder="Enter City Name">
+</div>
+
+<!-- Hidden input to store the location -->
+<input type="hidden" id="location" name="location">
+
+<button id="submitBtn" style="display:none;" onclick="submitForm()">Generate Day Plan</button>
+
+<!-- Displaying the generated itinerary -->
+<div id="itinerary"></div>
+
+<script>
+    function submitForm() {
+        let location = document.getElementById("location").value;
+        if (location === "") {
+            location = document.getElementById("manualLocationInput").value; // Use manual location if geolocation is empty
+        }
+
+        // Send the location to the backend (AJAX request)
+        fetch('/set_location', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                location: location
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Proceed to generate the day plan after setting location in session
+            return fetch('/generate_day_plan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Display the generated itinerary
+            document.getElementById("itinerary").innerHTML = data.day_plan;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>
+
+
+</body>
+</html>

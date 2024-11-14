@@ -3,6 +3,7 @@ import requests
 # OpenWeatherMap API key
 API_KEY = "1aae463eaddfb7323c4e48d07c1ca2b8"
 
+
 def get_lat_lon(city):
     """Get latitude and longitude of a city using OpenWeatherMap's Geocoding API."""
     url = f"http://api.openweathermap.org/geo/1.0/direct?q={city}&limit=1&appid={API_KEY}"
@@ -26,18 +27,8 @@ def get_current_weather(lat, lon):
     
     return weather_description, temperature
 
-# User input for city
-city = input("Enter the location: ")
-
-try:
-    # Get latitude and longitude for the given city
+def www(city):
     lat, lon = get_lat_lon(city)
-    
-    # Fetch current weather data
     weather_description, temperature = get_current_weather(lat, lon)
-
-    # Display current weather
     print(f"Current weather in {city}: {weather_description}, Temperature: {temperature}°C")
-    
-except ValueError as e:
-    print(e)
+    return temperature

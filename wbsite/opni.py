@@ -35,7 +35,7 @@ def prepare_prompt(place, visit_date, days, requirements):
     prompt = f"Plan a trip to {place} starting on {visit_date} for {days} days. "
     if requirements:
         prompt += f"Special requirements: {requirements}. "
-    prompt += "Make sure to include activities that are suitable for the weather during that time. and display day in only title"
+    prompt += "Make sure to include activities that are suitable for the weather during that time."
     
     return prompt
 
