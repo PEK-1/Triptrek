@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from .models import Trip  # Import the Trip model
 from .opni import generate_itinerary, generate_day_plan
 from .wether import www
+from datetime import datetime
 from . import db
 
 views = Blueprint('views', __name__)
@@ -162,16 +163,25 @@ def day():
 def set_location():
     data = request.get_json()
     location = data.get('location')
-    session['location'] = location  # Store location in session
-    return jsonify({"status": "Location set successfully"})
+    time = data.get('time')  # Get the time from the JSON payload
+
+    if not location or not time:
+        return jsonify({"error": "Location and time are required"}), 400
+
+    # Store location and time in session
+    session['location'] = location
+    session['time'] = time
+
+    return jsonify({"status": "Location and time set successfully"})
 
 @views.route('/generate_day_plan', methods=['POST'])
 def generate_day_plan_route():
     location = session.get('location')
+    time = session.get('time')
     if not location:
         return jsonify({"error": "Location not set"}), 400
     temp = www(location)
-    day_plan = generate_day_plan(location, temp)
+    day_plan = generate_day_plan(location, temp, time)
     
     # Return the plan in JSON format to be displayed on the frontend
     return jsonify({"day_plan": day_plan})

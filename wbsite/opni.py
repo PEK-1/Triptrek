@@ -39,9 +39,9 @@ def prepare_prompt(place, visit_date, days, requirements):
     
     return prompt
 
-def prepare_prompt(location, temp):
-    prompt = f" plan for the rest of the day for a visitor in {location}, where the current temperature is {temp}°C and the local time is [Time]. Please create a detailed itinerary that includes activities suited to the weather and time of day."
-    prompt+=f"The goal is to make the most of the day while ensuring comfort and enjoyment given the temperature and time."
+def prepare_prompt(location, temp, time):
+    prompt = f"Create a detailed plan for the remainder of the day for a visitor in {location}, considering the current temperature of {temp}°C and the local time of {time}."
+    prompt+=f"Create a simple and comfortable plan for the rest of the day, including 3-4 options such as shopping, a beach visit, enjoying a delicious meal, or sightseeing—anything that can enhance their day and make it more enjoyable."
     return prompt
 
 # Main function to be called from views.py
@@ -49,6 +49,6 @@ def generate_itinerary(place, visit_date, days, requirements):
     prompt = prepare_prompt(place, visit_date, days, requirements)
     return get_completion(prompt)
 
-def generate_day_plan(location, temp):
-    prompt = prepare_prompt(location,temp)
+def generate_day_plan(location, temp, time):
+    prompt = prepare_prompt(location,temp, time)
     return get_completion(prompt)

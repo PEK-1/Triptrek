@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Make My Day</title>
+    
     <script>
         // Function to get the user's location using the browser's geolocation API
         function getLocation() {
@@ -46,25 +47,30 @@
             document.getElementById("submitBtn").style.display = "inline";
         }
 
+        // Function to submit location and time to the backend
         function submitForm() {
             let location = document.getElementById("location").value;
             if (location === "") {
                 location = document.getElementById("manualLocationInput").value;
             }
 
-            // Send the location to the backend (AJAX request)
+            // Get the current time in ISO 8601 format
+            const currentTime = new Date().toISOString();
+
+            // Send the location and time to the backend
             fetch('/set_location', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    location: location
+                    location: location,
+                    time: currentTime // Include time
                 })
             })
             .then(response => response.json())
             .then(() => {
-                // Proceed to generate the day plan after setting location in session
+                // Proceed to generate the day plan after setting location and time in the session
                 return fetch('/generate_day_plan', {
                     method: 'POST',
                     headers: {
