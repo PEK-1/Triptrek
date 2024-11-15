@@ -2,8 +2,10 @@ from flask import Blueprint, render_template, request, flash, jsonify, redirect,
 from flask_login import login_required, current_user
 from .models import Trip  # Import the Trip model
 from .opni import generate_itinerary, generate_day_plan
-from .wether import www
+from .wether import www, get_lat_lon
 from datetime import datetime
+import pytz
+from timezonefinder import TimezoneFinder
 from . import db
 
 views = Blueprint('views', __name__)
@@ -155,33 +157,60 @@ def submit():
     # Render the formatted itinerary in a template
     return render_template("itinerary.html", itinerary=itinerary_html)
 
-@views.route ('/makemyday')
+@views.route('/makemyday')
 def day():
     return render_template('locate.html')
 
 @views.route('/set_location', methods=['POST'])
 def set_location():
     data = request.get_json()
-    location = data.get('location')
-    time = data.get('time')  # Get the time from the JSON payload
+    location = data.get('location')  # Get location (latitude, longitude or city name)
 
-    if not location or not time:
-        return jsonify({"error": "Location and time are required"}), 400
+    if not location:
+        return jsonify({"error": "Location is required"}), 400
 
-    # Store location and time in session
+    # Store location in session
     session['location'] = location
-    session['time'] = time
-
-    return jsonify({"status": "Location and time set successfully"})
+    return jsonify({"status": "Location set successfully"})
 
 @views.route('/generate_day_plan', methods=['POST'])
 def generate_day_plan_route():
     location = session.get('location')
-    time = session.get('time')
+
     if not location:
         return jsonify({"error": "Location not set"}), 400
+
+    # If location is in lat, lon format (e.g. "lat, lon"), we need to split it
+    if ',' in location:
+        lat, lon = map(float, location.split(','))
+    else:
+        # If location is a city name, use geocoding to get lat/lon
+        lat, lon = get_lat_lon(location)
+
+    if lat is None or lon is None:
+        return jsonify({"error": "Unable to get latitude and longitude for the location."}), 400
+
+    # Initialize TimezoneFinder to get the timezone based on latitude and longitude
+    tf = TimezoneFinder()
+    timezone_str = tf.timezone_at(lng=lon, lat=lat)
+
+    if timezone_str is None:
+        return jsonify({"error": "Unable to find timezone for this location."}), 400
+
+    # Get the current time in the timezone
+    timezone = pytz.timezone(timezone_str)
+    local_time = datetime.now(timezone)  # Get the current local time
+
+    # Format the local time to "HH:MM"
+    formatted_time = local_time.strftime('%H:%M')
+
+    # Example usage of time (if needed for generating the plan)
+    print(f"User's location: {location}")
+    print(f"User's time: {formatted_time}")
+
+    # Generate temperature and day plan
     temp = www(location)
-    day_plan = generate_day_plan(location, temp, time)
-    
+    day_plan = generate_day_plan(location, temp, formatted_time)
+
     # Return the plan in JSON format to be displayed on the frontend
     return jsonify({"day_plan": day_plan})
