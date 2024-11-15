@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, session
 from flask_login import login_required, current_user
 from .models import Trip  # Import the Trip model
-from .opni import generate_itinerary
+from .opni import generate_itinerary, generate_day_plan
+from .wether import www
 from . import db
 
 views = Blueprint('views', __name__)
@@ -152,3 +153,25 @@ def submit():
 
     # Render the formatted itinerary in a template
     return render_template("itinerary.html", itinerary=itinerary_html)
+
+@views.route ('/makemyday')
+def day():
+    return render_template('locate.html')
+
+@views.route('/set_location', methods=['POST'])
+def set_location():
+    data = request.get_json()
+    location = data.get('location')
+    session['location'] = location  # Store location in session
+    return jsonify({"status": "Location set successfully"})
+
+@views.route('/generate_day_plan', methods=['POST'])
+def generate_day_plan_route():
+    location = session.get('location')
+    if not location:
+        return jsonify({"error": "Location not set"}), 400
+    temp = www(location)
+    day_plan = generate_day_plan(location, temp)
+    
+    # Return the plan in JSON format to be displayed on the frontend
+    return jsonify({"day_plan": day_plan})

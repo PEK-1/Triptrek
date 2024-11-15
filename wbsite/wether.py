@@ -28,7 +28,13 @@ def get_current_weather(lat, lon):
     return weather_description, temperature
 
 def www(city):
-    lat, lon = get_lat_lon(city)
+    if ',' in city:
+        try:
+            lat, lon = map(float, city.split(','))
+        except ValueError:
+            raise ValueError("Invalid latitude or longitude format.")
+    else:
+        lat, lon = get_lat_lon(city)
     weather_description, temperature = get_current_weather(lat, lon)
     print(f"Current weather in {city}: {weather_description}, Temperature: {temperature}°C")
     return temperature

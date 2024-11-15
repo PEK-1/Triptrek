@@ -18,10 +18,9 @@
             // Get latitude and longitude from the browser's geolocation API
             var lat = position.coords.latitude;
             var lon = position.coords.longitude;
-            // Send the location to the server
-            document.getElementById("location").value = `${lat},${lon}`; // Set the hidden input value
-            document.getElementById("manualLocation").style.display = "none"; // Hide manual location input
-            document.getElementById("submitBtn").style.display = "inline"; // Show submit button
+            document.getElementById("location").value = `${lat},${lon}`;
+            document.getElementById("manualLocation").style.display = "none";
+            document.getElementById("submitBtn").style.display = "inline";
         }
 
         function showError(error) {
@@ -43,8 +42,44 @@
 
         // Show the manual location input field
         function showManualLocation() {
-            document.getElementById("manualLocation").style.display = "inline"; // Show manual input
-            document.getElementById("submitBtn").style.display = "inline"; // Show submit button
+            document.getElementById("manualLocation").style.display = "inline";
+            document.getElementById("submitBtn").style.display = "inline";
+        }
+
+        function submitForm() {
+            let location = document.getElementById("location").value;
+            if (location === "") {
+                location = document.getElementById("manualLocationInput").value;
+            }
+
+            // Send the location to the backend (AJAX request)
+            fetch('/set_location', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    location: location
+                })
+            })
+            .then(response => response.json())
+            .then(() => {
+                // Proceed to generate the day plan after setting location in session
+                return fetch('/generate_day_plan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the generated itinerary
+                document.getElementById("itinerary").innerHTML = data.day_plan;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         }
     </script>
 </head>
@@ -65,45 +100,6 @@
 
 <!-- Displaying the generated itinerary -->
 <div id="itinerary"></div>
-
-<script>
-    function submitForm() {
-        let location = document.getElementById("location").value;
-        if (location === "") {
-            location = document.getElementById("manualLocationInput").value; // Use manual location if geolocation is empty
-        }
-
-        // Send the location to the backend (AJAX request)
-        fetch('/set_location', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                location: location
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Proceed to generate the day plan after setting location in session
-            return fetch('/generate_day_plan', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Display the generated itinerary
-            document.getElementById("itinerary").innerHTML = data.day_plan;
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
-</script>
-
 
 </body>
 </html>
