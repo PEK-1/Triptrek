@@ -1,5 +1,6 @@
-
-{% block content %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -48,6 +49,17 @@
 </style>
 </head>
 <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
 
 <div style="text-align: center;">
     <form method="POST" style="display: inline-block; text-align: left;">
@@ -64,6 +76,10 @@
         <div>
             <button type="submit" class="btn btn-primary" style="padding: 10px 20px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Login</button>
         </div>
+        <p>Don't have an account? <a href="/sign_up">SignUp</a></p>
+
+        
     </form>
 </div>
-{% endblock %}
+</body>
+</html>
