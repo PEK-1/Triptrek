@@ -202,7 +202,7 @@ def day():
 @views.route('/set_location', methods=['POST'])
 def set_location():
     data = request.get_json()
-    location = data.get('location')  # Get location (latitude, longitude or city name)
+    location = data.get('location')  
 
     if not location:
         return jsonify({"error": "Location is required"}), 400
@@ -218,33 +218,61 @@ def generate_day_plan_route():
     if not location:
         return jsonify({"error": "Location not set"}), 400
 
-    # If location is in lat, lon format (e.g. "lat, lon"), we need to split it
     if ',' in location:
         lat, lon = map(float, location.split(','))
     else:
-        # If location is a city name, use geocoding to get lat/lon
         lat, lon = get_lat_lon(location)
 
     if lat is None or lon is None:
         return jsonify({"error": "Unable to get latitude and longitude for the location."}), 400
 
-    # Initialize TimezoneFinder to get the timezone based on latitude and longitude
     tf = TimezoneFinder()
     timezone_str = tf.timezone_at(lng=lon, lat=lat)
 
     if timezone_str is None:
         return jsonify({"error": "Unable to find timezone for this location."}), 400
-
-    # Get the current time in the timezone
+    
     timezone = pytz.timezone(timezone_str)
     local_time = datetime.now(timezone)  # Get the current local time
-
-    # Format the local time to "HH:MM"
     formatted_time = local_time.strftime('%H:%M')
 
-    # Generate temperature and day plan
+    # Assuming `www(location)` fetches the temperature
     temp = www(location)
+    
+    # Generate the day's plan
     day_plan = generate_day_plan(location, temp, formatted_time)
 
-    # Return the plan in JSON format to be displayed on the frontend
-    return jsonify({"day_plan": day_plan})
+    # Ensure the day_plan is formatted for the frontend
+    # You may choose to format this in a way that’s easily parsed in JavaScript
+    # Splitting by lines and making the first line bold, and making numbers bold
+    formatted_day_plan = format_day_plan(day_plan)
+
+    # Return formatted day_plan for frontend rendering
+    return jsonify({"day_plan": formatted_day_plan})
+
+
+def format_day_plan(day_plan):
+    # Format the day_plan to split by lines, bold the first part of each line, and stop bolding after "comfortable"
+    lines = day_plan.split('\n')
+    formatted_lines = []
+    counter = 1  # To keep track of numbering
+
+    for line in lines:
+        if line.strip():
+            # Bold the first part before the first colon (:) in each line
+            first_colon = line.find(":")
+            if first_colon != -1:
+                # Bold the part before the colon
+                line = f"<b>{line[:first_colon + 1]}</b>" + line[first_colon + 1:]
+
+            # Ensure that each step is numbered correctly
+            if line.startswith(str(counter) + '.'):
+                line = line.replace(str(counter) + '.', f"<b>{str(counter)}.</b>", 1)
+                counter += 1
+
+            # Add the formatted line to the list
+            formatted_lines.append(line)
+
+    # Join the formatted lines back together with line breaks
+    return "<br>".join(formatted_lines)
+

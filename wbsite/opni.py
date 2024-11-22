@@ -42,6 +42,7 @@ def prepare_promp(place, visit_date, days, requirements):
 def prepare_prompt(location, temp, time):
     prompt = f"Create a detailed plan for the remainder of the day for a visitor in {location}, considering the current temperature of {temp}°C and the local time of {time}."
     prompt+=f"Create a simple and comfortable plan for the rest of the day, including 3-4 options such as shopping, a beach visit, enjoying a delicious meal, or sightseeing—anything that can enhance their day and make it more enjoyable."
+    prompt+=f"importantly- do not give the reply in bold letters"
     return prompt
 
 # Main function to be called from views.py

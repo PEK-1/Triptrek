@@ -4,108 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Make My Day</title>
-    
-    <script>
-        // Function to get the user's location using the browser's geolocation API
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition, showError);
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
-        }
-
-        function showPosition(position) {
-            // Get latitude and longitude from the browser's geolocation API
-            var lat = position.coords.latitude;
-            var lon = position.coords.longitude;
-            document.getElementById("location").value = `${lat},${lon}`;
-            document.getElementById("manualLocation").style.display = "none";
-            document.getElementById("submitBtn").style.display = "inline";
-        }
-
-        function showError(error) {
-            switch(error.code) {
-                case error.PERMISSION_DENIED:
-                    alert("User denied the request for Geolocation.");
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    alert("Location information is unavailable.");
-                    break;
-                case error.TIMEOUT:
-                    alert("The request to get user location timed out.");
-                    break;
-                case error.UNKNOWN_ERROR:
-                    alert("An unknown error occurred.");
-                    break;
-            }
-        }
-
-        // Show the manual location input field
-        function showManualLocation() {
-            document.getElementById("manualLocation").style.display = "inline";
-            document.getElementById("submitBtn").style.display = "inline";
-        }
-
-        // Function to submit location and time to the backend
-        function submitForm() {
-            let location = document.getElementById("location").value;
-            if (location === "") {
-                location = document.getElementById("manualLocationInput").value;
-            }
-
-            // Get the current time in ISO 8601 format
-            const currentTime = new Date().toISOString();
-
-            // Send the location and time to the backend
-            fetch('/set_location', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    location: location,
-                    time: currentTime // Include time
-                })
-            })
-            .then(response => response.json())
-            .then(() => {
-                // Proceed to generate the day plan after setting location and time in the session
-                return fetch('/generate_day_plan', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Display the generated itinerary
-                document.getElementById("itinerary").innerHTML = data.day_plan;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-    </script>
+    <link rel="stylesheet" href="locate_style.css">
+    <script src="/static/getlocation.js" defer></script>
 </head>
 <body>
+    <div class="container">
+        <h1>Plan Your Day</h1>
 
-<h1>Plan Your Day</h1>
-<button onclick="getLocation()">Use My Location</button>
-<button onclick="showManualLocation()">Enter Location Manually</button>
+        <div class="form-box">
+            <button onclick="getLocation()">Use My Location</button>
+            <button onclick="showManualLocation()">Enter Location Manually</button>
 
-<div id="manualLocation" style="display:none;">
-    <input type="text" id="manualLocationInput" placeholder="Enter City Name">
-</div>
+            <div id="manualLocation" style="display:none;" class="input-container">
+                <input type="text" id="manualLocationInput" placeholder="Enter City Name">
+            </div>
 
-<!-- Hidden input to store the location -->
-<input type="hidden" id="location" name="location">
+            <!-- Hidden input to store the location -->
+            <input type="hidden" id="location" name="location">
 
-<button id="submitBtn" style="display:none;" onclick="submitForm()">Generate Day Plan</button>
+            <button id="submitBtn" style="display:none;" onclick="submitForm()">Generate Day Plan</button>
+        </div>
 
-<!-- Displaying the generated itinerary -->
-<div id="itinerary"></div>
+        <!-- Displaying the generated itinerary in a centered box -->
+        <div id="itinerary" class="itinerary-box"></div>
+    </div>
 
+    <script>
+        // Function to display the day plan with custom styling
+        function displayDayPlan(dayPlan) {
+            const itineraryBox = document.getElementById('itinerary');
+            let formattedPlan = '';
+            
+            // Split the day plan into steps based on numbers
+            const steps = dayPlan.split(/(\d+\.)/).filter(Boolean); // Split by numbers like "1.", "2.", etc.
+            
+            steps.forEach((step, index) => {
+                if (index === 0) {
+                    // First line - Make it bold
+                    formattedPlan += `<p class="bold">${step.trim()}</p>`;
+                } else {
+                    // Apply bold to numbers and maintain structure
+                    formattedPlan += `<p>${step.replace(/(\d+)/g, '<strong>$1</strong>')}</p>`;
+                }
+            });
+
+            itineraryBox.innerHTML = formattedPlan; // Insert the formatted plan into the box
+        }
+
+        // Example usage when receiving data
+        fetch('/generate_day_plan', {
+            method: 'POST',
+            body: JSON.stringify({ location: 'Chicago' }), // Example location
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.day_plan) {
+                displayDayPlan(data.day_plan); // Call the function to display the formatted plan
+            } else {
+                alert("Error generating day plan");
+            }
+        });
+    </script>
 </body>
 </html>
