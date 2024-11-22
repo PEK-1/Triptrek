@@ -24,8 +24,7 @@ Clone the Repository:
 
 bash
 Copy code
-git clone https://github.com/your-username/trip-tracker.git
-cd trip-tracker
+git clone https://github.com/PEK-1/Triptrek
 Create a Virtual Environment:
 
 bash
