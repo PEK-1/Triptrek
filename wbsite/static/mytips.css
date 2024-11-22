@@ -1,0 +1,135 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #eef2f3; 
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+    background-image: url('/static/background.jpg'); 
+    background-size: cover; 
+    background-position: center center; 
+    background-attachment: fixed;
+}
+
+.trip-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 60%;
+    max-width: 1200px;
+    height: 80vh; /* Adjust height for the scrollbar */
+    background: rgba(255, 255, 255, 0.8); /* Semi-transparent background for readability */
+    border-radius: 10px;
+    overflow-y: auto; /* Adds vertical scrolling */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    box-sizing: border-box;
+    gap: 10px;
+}
+
+.trip-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.trip-container::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 5px;
+}
+
+.trip-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.trip-links {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.trip-links a {
+    text-decoration: none;
+    font-size: 1em;
+    color: #93999f;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.trip-links :hover {
+    color: #07192a;
+}
+
+
+
+.trip-box {
+    max-width: 800px;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.trip-title {
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+    color: #6c4b0f;
+    margin-bottom: 20px;
+}
+
+.trip-item {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    background-color: #fafafa;
+    margin-bottom: 15px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    width: 700px;
+}
+
+.trip-item:hover {
+    background-color: #f0f8ff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.trip-subtitle {
+    font-size: 1.2em;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.trip-details {
+    display: none; 
+    margin-top: 10px;
+}
+
+.trip-item:hover .trip-details {
+    display: block;
+}
+
+
+@media (max-width: 768px) {
+    .trip-box {
+        padding: 15px;
+    }
+
+    .trip-title {
+        font-size: 1.5em;
+    }
+
+    .trip-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+}

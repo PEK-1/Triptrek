@@ -8,7 +8,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
-    trips = db.relationship('Trip', backref='user', lazy=True)  # Relationship with Trip model
+    trips = db.relationship('Trip', backref='user', lazy=True)
+    map_data = db.relationship('MapData', backref='user', lazy=True)  
 
 class Trip(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -24,3 +25,10 @@ class Trip(db.Model):
     food_recommendations = db.Column(db.Text, nullable=True)
     trip_description = db.Column(db.Text, nullable=True)
     date_added = db.Column(db.DateTime(timezone=True), default=func.now())
+
+class MapData(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Link to User model
+    country = db.Column(db.String(100), nullable=False)  # Country name
+    color = db.Column(db.String(20), default='white')  # Selected color for the country
+    note = db.Column(db.String(255), nullable=True)  # Note for the country    

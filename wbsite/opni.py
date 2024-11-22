@@ -31,7 +31,7 @@ def get_completion(prompt, model="gpt-3.5-turbo"):
     return response.choices[0].message.content
 
 # Function to prepare the prompt based on user input data
-def prepare_prompt(place, visit_date, days, requirements):
+def prepare_promp(place, visit_date, days, requirements):
     prompt = f"Plan a trip to {place} starting on {visit_date} for {days} days. "
     if requirements:
         prompt += f"Special requirements: {requirements}. "
@@ -46,7 +46,7 @@ def prepare_prompt(location, temp, time):
 
 # Main function to be called from views.py
 def generate_itinerary(place, visit_date, days, requirements):
-    prompt = prepare_prompt(place, visit_date, days, requirements)
+    prompt = prepare_promp(place, visit_date, days, requirements)
     return get_completion(prompt)
 
 def generate_day_plan(location, temp, time):

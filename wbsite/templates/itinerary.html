@@ -31,7 +31,26 @@
             background-color: #fff;
             border: 1px solid #ddd;
             border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
+        .day h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .day p {
+            margin: 5px 0;
+            font-size: 1em;
+        }
+
+        .day .subheading {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
         h2 {
             color: #333;
         }
@@ -63,6 +82,7 @@
         <!-- Dynamic itinerary content goes here -->
         {{ itinerary|safe }}
     </main>
+    
     <footer>
         <button> save </button>
         <button onclick="downloadItinerary()">download</button>

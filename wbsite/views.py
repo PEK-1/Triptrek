@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, session
 from flask_login import login_required, current_user
-from .models import Trip  # Import the Trip model
+from .models import Trip, MapData  # Import the Trip model
 from .opni import generate_itinerary, generate_day_plan
 from .wether import www, get_lat_lon
 from datetime import datetime
@@ -17,8 +17,46 @@ def index():
 @views.route('/home', methods=['GET'])
 @login_required
 def home():
-    return render_template("home.html", user=current_user)
+    # Fetch map data for the current user
+    user_map_data = MapData.query.filter_by(user_id=current_user.id).all()
+    map_data = [{"country": data.country, "color": data.color, "note": data.note} for data in user_map_data]
+    return render_template("home.html", user=current_user, map_data=map_data)
 
+
+@views.route('/save_map_data', methods=['POST'])
+@login_required
+def save_map_data():
+    data = request.get_json()
+    country = data.get('country')
+    color = data.get('color')
+    note = data.get('note')
+
+    if not country:
+        return jsonify({"error": "Country is required"}), 400
+
+    # Check if the map data already exists for this user and country
+    existing_data = MapData.query.filter_by(user_id=current_user.id, country=country).first()
+
+    if existing_data:
+        # Update the existing record
+        existing_data.color = color
+        existing_data.note = note
+    else:
+        # Create a new record
+        new_map_data = MapData(user_id=current_user.id, country=country, color=color, note=note)
+        db.session.add(new_map_data)
+
+    db.session.commit()
+    return jsonify({"message": "Map data saved successfully"}), 200
+
+
+@views.route('/reset_map', methods=['POST'])
+@login_required
+def reset_map():
+    # Delete all map data for the current user
+    MapData.query.filter_by(user_id=current_user.id).delete()
+    db.session.commit()
+    return jsonify({"message": "Map data reset successfully"}), 200
 @views.route('/')
 def form():
     return render_template("form.html")
@@ -203,10 +241,6 @@ def generate_day_plan_route():
 
     # Format the local time to "HH:MM"
     formatted_time = local_time.strftime('%H:%M')
-
-    # Example usage of time (if needed for generating the plan)
-    print(f"User's location: {location}")
-    print(f"User's time: {formatted_time}")
 
     # Generate temperature and day plan
     temp = www(location)
