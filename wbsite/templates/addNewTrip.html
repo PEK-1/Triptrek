@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
   <title>Interactive Trip Details Form</title>
   <link rel="stylesheet" href="/static/addtrip.css">
 </head>
@@ -12,71 +11,68 @@
 <div class="container">
   <h2>Share Your Trip Details</h2>
   <form action="{{ url_for('views.add_trip') }}" method="POST">
+    <div class="form-columns">
+      <div class="left-column">
+        <div class="form-group">
+          <label for="place">Place:</label>
+          <input type="text" id="place" name="place" placeholder="Enter the destination" required>
+        </div>
+        <div class="form-group">
+          <label for="days">Number of Days:</label>
+          <input type="number" id="days" name="days" min="1" placeholder="Enter the number of days" required>
+        </div>
+        <div class="form-group">
+          <label for="month">Which Month:</label>
+          <input type="month" id="month" name="month" required>
+        </div>
+        <div class="form-group">
+          <label for="budget">Budget (approximate):</label>
+          <input type="number" id="budget" name="budget" min="0" step="1" placeholder="Enter your budget in USD">
+        </div>
+        <div class="form-group">
+          <label for="accommodation">Place Stayed (Accommodation):</label>
+          <input type="text" id="accommodation" name="accommodation" placeholder="e.g., Hotel, Airbnb">
+        </div>
+        <div class="form-group">
+          <label for="transport">How Did You Travel (Transport):</label>
+          <select id="transport" name="transport">
+            <option value="plane">Plane</option>
+            <option value="train">Train</option>
+            <option value="car">Car</option>
+            <option value="bus">Bus</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
 
-    
-    <div class="form-group">
-      <label for="place">Place:</label>
-      <input type="text" id="place" name="place" placeholder="Enter the destination" required>
+      <div class="right-column">
+        <div class="form-group">
+          <label for="local-travel">How Did You Travel Locally:</label>
+          <select id="local-travel" name="local_travel">
+            <option value="bus">Bus</option>
+            <option value="cab">Cab</option>
+            <option value="rented-car">Rented Car</option>
+            <option value="bike">Bike</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="places-visited">Places Visited:</label>
+          <textarea id="places-visited" name="places_visited" rows="3" placeholder="List all places visited"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="food-recommendations">Recommended Food Places/Dishes:</label>
+          <textarea id="food-recommendations" name="food_recommendations" rows="3" placeholder="Mention any must-try food or restaurants"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="trip-description">Brief Description of Your Trip:</label>
+          <textarea id="trip-description" name="trip_description" rows="5" placeholder="Share your experience, highlights, etc." required></textarea>
+        </div>
+        <div class="form-button">
+          <button type="submit">Add Trip</button>
+      </div>
     </div>
-
-    <div class="form-group">
-      <label for="days">Number of Days:</label>
-      <input type="number" id="days" name="days" min="1" placeholder="Enter the number of days" required>
     </div>
-
-    <div class="form-group">
-      <label for="month">Which Month:</label>
-      <input type="month" id="month" name="month" required>
-    </div>
-
-    <div class="form-group">
-      <label for="budget">Budget (approximate):</label>
-      <input type="number" id="budget" name="budget" min="0" step="1" placeholder="Enter your budget in USD">
-    </div>
-
-    <div class="form-group">
-      <label for="accommodation">Place Stayed (Accommodation):</label>
-      <input type="text" id="accommodation" name="accommodation" placeholder="e.g., Hotel, Airbnb">
-    </div>
-
-    <div class="form-group">
-      <label for="transport">How Did You Travel (Transport):</label>
-      <select id="transport" name="transport">
-        <option value="plane">Plane</option>
-        <option value="train">Train</option>
-        <option value="car">Car</option>
-        <option value="bus">Bus</option>
-        <option value="other">Other</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="local-travel">How Did You Travel Locally:</label>
-      <select id="local-travel" name="local_travel">
-        <option value="bus">Bus</option>
-        <option value="cab">Cab</option>
-        <option value="rented-car">Rented Car</option>
-        <option value="bike">Bike</option>
-        <option value="other">Other</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label for="places-visited">Places Visited:</label>
-      <textarea id="places-visited" name="places_visited" rows="3" placeholder="List all places visited"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label for="food-recommendations">Recommended Food Places/Dishes:</label>
-      <textarea id="food-recommendations" name="food_recommendations" rows="3" placeholder="Mention any must-try food or restaurants"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label for="trip-description">Brief Description of Your Trip:</label>
-      <textarea id="trip-description" name="trip_description" rows="5" placeholder="Share your experience, highlights, etc." required></textarea>
-    </div>
-
-    <button type="submit"> Add Trip</button>
   </form>
 </div>
 
