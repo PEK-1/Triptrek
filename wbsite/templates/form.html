@@ -106,27 +106,39 @@
 </head>
 <body>
 
-<!-- Navbar -->
-<div class="navbar">
-    <a href="/logo">Home</a>
-    <a href="#">About</a>
-    <a href="#">Contact</a>
-    <div class="search-bar">
-        <form action="/search" method="GET">
-            <input type="text" id="search-bar" name="query" placeholder="Search destinations...">
-            <button type="submit">Search</button>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      {% if session.get('logged_in') %}
+        <a class="nav-item nav-link" href="/home">Home</a>
+        <a class="nav-item nav-link" href="/mytips">My Trips</a>
+        <a class="nav-item nav-link" href="/makemyday">New day</a>
+        <form class="search-bar" action="/search" method="GET">
+          <input type="text" id="search-bar" name="query" placeholder="Search destinations..." />
+          <button type="submit">Search</button>
         </form>
-        <div id="suggestions"></div>
+        <div class="top-right">
+            <button onclick="location.href='/logout'"style="padding: 10px 20px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">logout</button>
+        </div>  
+      {% else %}
+        <!-- Guest Navbar -->
+        <a class="nav-item nav-link" href="/logo">Home</a>
+        <a class="nav-item nav-link" href="#">About</a>
+        <a class="nav-item nav-link" href="#">Contact</a>
+        <form class="search-bar" action="/search" method="GET">
+          <input type="text" id="search-bar" name="query" placeholder="Search destinations..." />
+          <button type="submit">Search</button>
+        </form>
+            <div class="top-right">
+                <button onclick="location.href='/log'" style="padding: 10px 20px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">Login</button>
+                <button onclick="location.href='/sign_up'" style="padding: 10px 20px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">Signup</button>
+            </div>        
+      {% endif %}
     </div>
-</div>
+  </nav>
 
 <!-- Form Container -->
 <div class="container">
-    <div class="top-right">
-        <button onclick="location.href='/log'" style="padding: 10px 20px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">Login</button>
-        <button onclick="location.href='/sign_up'" style="padding: 10px 20px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">Signup</button>
-    </div>
-
     <!-- Form with POST method -->
     <form action="/submit" method="POST">
         <div class="form-group">
