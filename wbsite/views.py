@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, session
 from flask_login import login_required, current_user
-from .models import Trip, MapData  # Import the Trip model
+from .models import Trip, MapData  # Import the Trip and MapData models
 from .opni import generate_itinerary, generate_day_plan
 from .wether import www, get_lat_lon
 from datetime import datetime
@@ -13,6 +13,7 @@ views = Blueprint('views', __name__)
 @views.route('/logo')
 def index():
     return render_template("index.html")
+
 
 @views.route('/home', methods=['GET'])
 @login_required
@@ -57,9 +58,12 @@ def reset_map():
     MapData.query.filter_by(user_id=current_user.id).delete()
     db.session.commit()
     return jsonify({"message": "Map data reset successfully"}), 200
+
+
 @views.route('/')
 def form():
     return render_template("form.html")
+
 
 @views.route('/search', methods=['GET'])
 def search():
@@ -71,12 +75,12 @@ def search():
         destinations = []  # No query parameter means show no results
     
     # Prepare the results to include the user's name and date added
-    destinations_data = [{
+    destinations_data = [ {
         "place": destination.place,
         "days": destination.days,
         "trip_description": destination.trip_description,
         "budget": destination.budget,
-        "date_added": destination.date_added.strftime('%Y-%m-%d'),  # Format the date
+        "date_added": destination.date_added.strftime('%Y-%m-%d'),
         "user_name": destination.user.first_name  # Get the first name of the user
     } for destination in destinations]
     
@@ -123,10 +127,13 @@ def add_trip():
 
     return render_template("addNewTrip.html")
 
+
 @views.route('/mytips')
 @login_required
 def mytips():
-    return render_template("mytips.html", user=current_user)
+    trips = Trip.query.filter_by(user_id=current_user.id).all()
+    return render_template("mytips.html", user=current_user, trips=trips)
+
 
 @views.route('/delete_trip/<int:trip_id>', methods=['DELETE'])
 @login_required
@@ -195,9 +202,11 @@ def submit():
     # Render the formatted itinerary in a template
     return render_template("itinerary.html", itinerary=itinerary_html)
 
+
 @views.route('/makemyday')
 def day():
     return render_template('locate.html')
+
 
 @views.route('/set_location', methods=['POST'])
 def set_location():
@@ -210,6 +219,7 @@ def set_location():
     # Store location in session
     session['location'] = location
     return jsonify({"status": "Location set successfully"})
+
 
 @views.route('/generate_day_plan', methods=['POST'])
 def generate_day_plan_route():
@@ -243,11 +253,8 @@ def generate_day_plan_route():
     day_plan = generate_day_plan(location, temp, formatted_time)
 
     # Ensure the day_plan is formatted for the frontend
-    # You may choose to format this in a way that’s easily parsed in JavaScript
-    # Splitting by lines and making the first line bold, and making numbers bold
     formatted_day_plan = format_day_plan(day_plan)
 
-    # Return formatted day_plan for frontend rendering
     return jsonify({"day_plan": formatted_day_plan})
 
 
@@ -259,20 +266,16 @@ def format_day_plan(day_plan):
 
     for line in lines:
         if line.strip():
-            # Bold the first part before the first colon (:) in each line
-            first_colon = line.find(":")
-            if first_colon != -1:
-                # Bold the part before the colon
-                line = f"<b>{line[:first_colon + 1]}</b>" + line[first_colon + 1:]
+            # Bold the first sentence or up to "comfortable"
+            comfortable_index = line.find("comfortable")
+            if comfortable_index != -1:
+                start = line[:comfortable_index + len("comfortable")]
+                end = line[comfortable_index + len("comfortable"):]
+                formatted_line = f"<b>{counter}. {start}</b>{end}"
+            else:
+                formatted_line = f"<b>{counter}. {line}</b>"
 
-            # Ensure that each step is numbered correctly
-            if line.startswith(str(counter) + '.'):
-                line = line.replace(str(counter) + '.', f"<b>{str(counter)}.</b>", 1)
-                counter += 1
+            counter += 1
+            formatted_lines.append(formatted_line)
 
-            # Add the formatted line to the list
-            formatted_lines.append(line)
-
-    # Join the formatted lines back together with line breaks
     return "<br>".join(formatted_lines)
-

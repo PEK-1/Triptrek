@@ -11,7 +11,7 @@
     rel="stylesheet">
 
   <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.css">
 
   <style>
     .navbar-nav .nav-item {
@@ -23,6 +23,13 @@
       width: 80%;    /* Set desired width */
       margin: 30px auto; /* Center the map and add top margin */
       display: block; /* Center-align the map */
+    }
+    .btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 10px auto;
+      display: block;
     }
   </style>
 </head>
@@ -67,10 +74,11 @@
 
   <!-- Map Container -->
   <div id="map"></div>
+  <button id="resetMapButton" class="btn btn-danger mt-3">Reset Map</button>
 </div>
 
 <!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.3/leaflet.js"></script>
 
 <!-- JavaScript for Map -->
 <script>
@@ -90,31 +98,70 @@
     attribution: '© OpenStreetMap contributors'
   }).addTo(map);
 
-  // Load GeoJSON data (example path)
-  fetch('static/maap.geojson') // My GeoJSON file
-  .then(response => response.json())
-  .then(data => {
-    L.geoJSON(data, {
-      style: feature => ({
-        fillColor: 'white', // Default color
-        weight: 1,
-        opacity: 1,
-        color: 'black',
-        fillOpacity: 0.7
-      }),
-      onEachFeature: (feature, layer) => {
-        layer.on('click', () => {
-          layer.setStyle({ fillColor: 'grey' }); // Change color on click
-          const note = prompt("Add a note for this country:");
-          if (note) {
-            layer.bindPopup(`<b>Note:</b> ${note}`).openPopup();
-          }
-        });
-      }
-    }).addTo(map);
-  })
-  .catch(error => {
-    console.error('Error loading GeoJSON data:', error);
+  let geojsonLayer;
+
+  fetch('/static/maap.geojson') // GeoJSON file
+    .then(response => response.json())
+    .then(geojson => {
+      geojsonLayer = L.geoJSON(geojson, {
+        style: feature => ({
+          fillColor: 'white', // Default color
+          weight: 1,
+          opacity: 1,
+          color: 'black',
+          fillOpacity: 0.7
+        }),
+        onEachFeature: (feature, layer) => {
+          layer.on('click', () => {
+            const country = feature.properties.name;
+            const color = prompt("Choose a color for this country (e.g., 'blue'):", 'white');
+            const note = prompt("Add a note for this country:", '');
+
+            if (color) {
+              layer.setStyle({ fillColor: color, fillOpacity: 0.5 });
+            }
+            if (note) {
+              layer.bindPopup(`<b>Note:</b> ${note}`).openPopup();
+            }
+
+            // Save the map data for this country
+            fetch('/save_map_data', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ country, color, note })
+            })
+              .then(response => response.json())
+              .then(data => console.log(data.message))
+              .catch(error => console.error('Error saving map data:', error));
+          });
+        }
+      }).addTo(map);
+
+      // Fetch stored map data for the user and apply it
+      fetch('/get_map_data')
+        .then(response => response.json())
+        .then(mapData => {
+          mapData.forEach(data => {
+            const layer = geojsonLayer.getLayers().find(l => l.feature.properties.name === data.country);
+            if (layer) {
+              layer.setStyle({ fillColor: data.color, fillOpacity: 0.5 });
+              layer.bindPopup(`<b>Note:</b> ${data.note}`);
+            }
+          });
+        })
+        .catch(error => console.error('Error fetching map data:', error));
+    })
+    .catch(error => console.error('Error loading GeoJSON:', error));
+
+  // Reset map button functionality
+  document.getElementById('resetMapButton').addEventListener('click', () => {
+    fetch('/reset_map', { method: 'POST' })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.message);
+        location.reload();
+      })
+      .catch(error => console.error('Error resetting map:', error));
   });
 </script>
 
@@ -123,4 +170,3 @@
 
 </body>
 </html>
-

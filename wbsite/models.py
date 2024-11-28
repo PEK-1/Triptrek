@@ -31,4 +31,5 @@ class MapData(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Link to User model
     country = db.Column(db.String(100), nullable=False)  # Country name
     color = db.Column(db.String(20), default='white')  # Selected color for the country
-    note = db.Column(db.String(255), nullable=True)  # Note for the country    
+    note = db.Column(db.String(255), nullable=True)  # Note for the country
+    date_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())  # Automatically updates on modification
