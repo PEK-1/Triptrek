@@ -1,7 +1,5 @@
 Flask==2.3.2
 Flask-SQLAlchemy==3.0.5
-Flask-WTF==1.1.1
-WTForms==3.1.1
 Flask-Login==0.6.3
 Werkzeug==2.3.7
 python-dotenv==1.0.0
@@ -13,6 +11,3 @@ leaflet==1.9.3
 python-dotenv==1.0.0  
 requests==2.31.0  
 
-# For testing and debugging
-pytest==7.4.2
-pytest-flask==1.2.0
