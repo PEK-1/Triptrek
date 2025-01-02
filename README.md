@@ -1,7 +1,7 @@
 Trip Tracker Application
 Overview
 The Trip Tracker application is a web-based platform designed to help users plan, manage, and share their travel itineraries. Users can log in, create accounts, add trips, and save details such as accommodation, transport, budget, and places visited. The application allows users to search for trips, view their trip history, and generate detailed itineraries based on their inputs.
-
+Demo- https://drive.google.com/file/d/1IdIl5mzSJyWuV1MnIoKcHEjV5zV-QAr3/view?usp=drive_link
 Features
 User Authentication: Secure login and sign-up for users.
 Trip Management: Add, view, delete, and search trips.
