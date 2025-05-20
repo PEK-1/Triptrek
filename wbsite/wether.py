@@ -1,7 +1,7 @@
 import requests
 
 # OpenWeatherMap API key
-API_KEY = "1aae463eaddfb7323c4e48d07c1ca2b8"
+API_KEY = "enter your OpenWeatherMAo API here"
 
 
 def get_lat_lon(city):
